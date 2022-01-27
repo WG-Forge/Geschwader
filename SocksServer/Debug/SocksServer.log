@@ -1,0 +1,12 @@
+﻿  ClientWG.cpp
+  JSONParser.cpp
+C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\JSONParser.h(157,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\JSONParser.h(161,23): warning C4018: <: несоответствие типов со знаком и без знака
+  SocksServer.cpp
+C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\JSONParser.h(157,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\JSONParser.h(161,23): warning C4018: <: несоответствие типов со знаком и без знака
+  Создание кода...
+C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\ClientWG.cpp(86): warning C4715: ClientWG::send_data: значение возвращается не при всех путях выполнения
+C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\ClientWG.cpp(97): warning C4715: ClientWG::end_work: значение возвращается не при всех путях выполнения
+  LINK : не найден или не выполнена сборка C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\Debug\SocksServer.exe при последней инкрементной компоновке; выполняется полная компоновка
+  SocksServer.vcxproj -> C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\Debug\SocksServer.exe
