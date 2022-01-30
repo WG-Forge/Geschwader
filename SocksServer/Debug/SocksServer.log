@@ -1,14 +1,1 @@
-﻿  SocksServer.cpp
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\JSONParser.h(174,21): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\JSONParser.h(178,23): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(40,23): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(67,27): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(85,23): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(94,27): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(104,27): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(114,27): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(175,31): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(195,35): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(196,39): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\SocksServer\SocksServer.cpp(236,51): warning C4018: <: несоответствие типов со знаком и без знака
-  SocksServer.vcxproj -> C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\Debug\SocksServer.exe
+﻿  SocksServer.vcxproj -> C:\Users\Daniil\Desktop\Дз WG\Проект\Geschwader\Debug\SocksServer.exe
