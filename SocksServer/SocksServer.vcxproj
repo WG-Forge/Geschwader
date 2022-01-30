@@ -151,6 +151,10 @@
   <ItemGroup>
     <ClInclude Include="ClientWG.h" />
     <ClInclude Include="JSONParser.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SocksServer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

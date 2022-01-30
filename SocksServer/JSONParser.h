@@ -8,15 +8,17 @@ using nlohmann::json;
 struct PlayerSend {
 	std::string name;
 	std::string password;
+	std::string game;
 	int num_turns;
 	int num_players;
 	bool is_observer;
-	PlayerSend(std::string _name, std::string _password = "", int _num_turns = 45, int _num_players = 1, bool _is_observer = false):
-	name(_name), password(_password), num_turns(_num_turns), num_players(_num_players), is_observer(_is_observer) {}
+	PlayerSend(std::string _name, std::string _password = "",std::string _game = "", int _num_turns = 45, int _num_players = 1, bool _is_observer = false) :
+	name(_name), game(_game), password(_password), num_turns(_num_turns), num_players(_num_players), is_observer(_is_observer) {}
 	std::string to_json() {
 		nlohmann::json j{};
 		j["name"] = name;
 		j["password"] = password;
+		j["game"] = game;
 		j["num_turns"] = num_turns;
 		j["num_players"] = num_players;
 		j["is_observer"] = is_observer;
@@ -40,6 +42,11 @@ struct Point {
 	int x;
 	int y;
 	int z;
+	Point(int x_, int y_, int z_) {
+		x = x_;
+		y = y_;
+		z = z_;
+	}
 	Point(std::string str = "") {
 		if (str != "") {
 			nlohmann::json j = nlohmann::json::parse(str);
@@ -56,19 +63,29 @@ struct Point {
 		return j.dump();
 	}
 };
+struct TankType {
+	std::string name;
+	int health;
+	int speed;
+};
 struct Tank {
 	int player_id;
 	int tank_id;
-	std::string vehicle_type;
+	TankType vehicle_type;
 	int health;
 	Point spawn_position;
 	Point position;
 	int capture_points;
-	Tank() {}
+	Tank() {
+		player_id = -1;
+	}
 	Tank(std::string str, std::string _tank_id) {
 		nlohmann::json j = nlohmann::json::parse(str);
 		player_id = j["player_id"].get<int>();
-		vehicle_type = j["vehicle_type"].get<std::string>();
+		std::string type = j["vehicle_type"].get<std::string>();
+		if (type == "medium_tank") {
+			vehicle_type = TankType("medium_tank", 2, 2);
+		}
 		health = j["health"].get<int>();
 		spawn_position = Point(j["spawn_position"].dump());
 		position = Point(j["position"].dump());
@@ -196,12 +213,12 @@ struct Chat {
 	}
 };
 struct DataAction {
-	std::string vehicle_id;
+	int vehicle_id;
 	Point target;
 	DataAction() {}
 	DataAction(std::string str) {
 		nlohmann::json j = nlohmann::json::parse(str);
-		vehicle_id = j["vehicle_id"];
+		vehicle_id = j["vehicle_id"].get<int>();
 		target = Point(j["target"].dump());
 	}
 	std::string to_json() {
