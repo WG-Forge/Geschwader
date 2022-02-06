@@ -1,3 +1,0 @@
-﻿  SocksServer.cpp
-C:\Users\vippo\source\repos\Geschwader\SocksServer\SocksServer.cpp(202,57): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-  SocksServer.vcxproj -> C:\Users\vippo\source\repos\Geschwader\x64\Debug\SocksServer.exe
