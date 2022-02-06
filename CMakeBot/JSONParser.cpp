@@ -90,12 +90,12 @@ void GameState::from_json(json j) {
 	num_turns = j["num_turns"].get<int>();
 	current_turn = j["current_turn"].get<int>();
 	vector<json> jj = j["players"].get<vector<json>>();
-	for (auto value : jj) {
-		players.push_back(PlayerGet(value.dump()));
+	for (const auto& value : jj) {
+		players.emplace_back(value);
 	}
 	jj = j["observers"].get<vector<json>>();
-	for (auto value : jj) {
-		observers.push_back(PlayerGet(value.dump()));
+	for (const auto& value : jj) {
+		observers.emplace_back(value);
 	}
 	current_player_idx = j["current_player_idx"].get<int>();
 	finished = j["finished"].get<bool>();
@@ -136,8 +136,7 @@ void GameState::from_json(json j) {
 	
 	jmap = j["win_points"].get<map<json, json>>();
 	for (const auto& it : jmap) {
-		WinPoints buf(it.second);
-		win_points[stoi(it.first.get<string>())] = buf;
+		win_points[stoi(it.first.get<string>())] = WinPoints(it.second);
 	}
 }
 

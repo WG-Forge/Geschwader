@@ -18,7 +18,9 @@ struct Query {
     std::string json_data;
 
     Query() = default;
-    Query(uint32_t code, json data = "") : code(code), json_data(data.dump()) {}
+    Query(uint32_t code, json data = "") : code(code) {
+        json_data = (data == "") ? "" : data.dump();
+    }
 };
 
 enum Action
@@ -51,7 +53,22 @@ public:
     Query send_data(const Query& data);
     void end_work();
 private:
+    int receive_data() {
+        int buf = recv(connectSocket, recvbuf + iResult, DEFAULT_BUFLEN - iResult, 0);
+        if (buf == 0) {
+            printf("Connection closed\n");
+        }
+        if (buf < 0) {
+            printf("recv failed with error: %d\n", WSAGetLastError());
+        }
+        if (buf <= 0) exit(0);
+        return buf;
+    }
+
+    int iResult;
     WSADATA wsaData;
     SOCKET connectSocket;
+    char sendbuf[200];
+    char recvbuf[DEFAULT_BUFLEN];
 };
 

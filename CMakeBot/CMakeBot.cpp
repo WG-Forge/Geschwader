@@ -1,4 +1,23 @@
 ﻿#include "CMakeBot.h"
+#include <chrono>
+
+class Timer {
+private:
+    using clock_t = std::chrono::high_resolution_clock;
+    using second_t = std::chrono::duration<double, std::ratio<1> >;
+    std::chrono::time_point<clock_t> m_beg;
+
+public:
+    Timer() : m_beg(clock_t::now()) {}
+
+    void reset() {
+        m_beg = clock_t::now();
+    }
+
+    double elapsed() const {
+        return std::chrono::duration_cast<second_t>(clock_t::now() - m_beg).count();
+    }
+};
 
 using std::string;
 using std::vector;
@@ -109,6 +128,8 @@ vector<Point> find_min_way(Point start, const vector<Point>& end, int rad,
 int main()
 {
     ClientWG wg;
+    wg.start_work();
+
     Query data;
     string name, game;
     std::cout << "Name : ";
@@ -119,8 +140,7 @@ int main()
     GameState gm;
     Map mm;
     DataAction action;
-
-    wg.start_work();
+    Timer t;
 
     data = wg.send_data({ Action::LOGIN, pl });
     std::cout << data.code << " " << data.json_data << std::endl;
@@ -136,7 +156,6 @@ int main()
         }
         catch (const std::exception& e) {
             cout << "We have exception : " << e.what() << endl;
-            cout << data.json_data.size() << endl;
             std::cout << data.code << " " << data.json_data << std::endl;
             system("pause");
         }
@@ -172,7 +191,7 @@ int main()
                     }
                 }
                 if (victim != nullptr) {
-                    cout << (json)bot_tank.position << "attacked" << (json)victim->position << endl;
+                    cout << (json)bot_tank.position << " attacked " << (json)victim->position << endl;
                     action.vehicle_id = bot_tank.tank_id;
                     action.target = victim->position;
                     if (victim->health == 1) {
@@ -220,7 +239,6 @@ int main()
                 }
             }
             data = { Action::TURN };
-            std::cout << data.code << " " << data.json_data << std::endl;
             data = wg.send_data(data);
         }
     }
@@ -229,6 +247,7 @@ int main()
     data = wg.send_data({Action::LOGOUT});
     std::cout << data.code << " " << data.json_data << std::endl;
     wg.end_work();
+    std::cout << "Time elapsed: " << t.elapsed() << std::endl;
     system("pause");
     return 0;
 }
