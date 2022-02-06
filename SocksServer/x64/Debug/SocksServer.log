@@ -1,9 +1,3 @@
-﻿  ClientWG.cpp
-C:\Users\Daniil\Desktop\Дз WG\Проект\SocksServer\SocksServer\ClientWG.cpp(58,37): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
-  JSONParser.cpp
-C:\Users\Daniil\Desktop\Дз WG\Проект\SocksServer\SocksServer\JSONParser.h(5,10): fatal error C1083: Не удается открыть файл включение: nlohmann/json.hpp: No such file or directory,
-  SocksServer.cpp
-C:\Users\Daniil\Desktop\Дз WG\Проект\SocksServer\SocksServer\SocksServer.cpp(4,10): fatal error C1083: Не удается открыть файл включение: nlohmann/json.hpp: No such file or directory,
-  Создание кода...
-C:\Users\Daniil\Desktop\Дз WG\Проект\SocksServer\SocksServer\ClientWG.cpp(86): warning C4715: ClientWG::send_data: значение возвращается не при всех путях выполнения
-C:\Users\Daniil\Desktop\Дз WG\Проект\SocksServer\SocksServer\ClientWG.cpp(97): warning C4715: ClientWG::end_work: значение возвращается не при всех путях выполнения
+﻿  SocksServer.cpp
+C:\Users\vippo\source\repos\Geschwader\SocksServer\SocksServer.cpp(202,57): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  SocksServer.vcxproj -> C:\Users\vippo\source\repos\Geschwader\x64\Debug\SocksServer.exe
