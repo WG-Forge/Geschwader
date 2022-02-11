@@ -14,7 +14,11 @@ set(HEADERS
 		JSONParser.h
 )
 
+find_library(Ws2 Ws2_32.lib REQUIRED)
+
 add_executable (CMakeBot ${SOURCES} ${HEADERS})
+
+target_link_libraries(CMakeBot ${Ws2})
 
 set_target_properties(
 	CMakeBot PROPERTIES

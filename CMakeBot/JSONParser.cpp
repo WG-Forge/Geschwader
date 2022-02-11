@@ -89,12 +89,12 @@ void GameState::from_json(json j) {
 	num_players = j["num_players"].get<int>();
 	num_turns = j["num_turns"].get<int>();
 	current_turn = j["current_turn"].get<int>();
-	vector<json> jj = j["players"].get<vector<json>>();
-	for (const auto& value : jj) {
+	vector<json> jvec = j["players"].get<vector<json>>();
+	for (const auto& value : jvec) {
 		players.emplace_back(value);
 	}
-	jj = j["observers"].get<vector<json>>();
-	for (const auto& value : jj) {
+	jvec = j["observers"].get<vector<json>>();
+	for (const auto& value : jvec) {
 		observers.emplace_back(value);
 	}
 	current_player_idx = j["current_player_idx"].get<int>();
