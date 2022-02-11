@@ -18,6 +18,7 @@
 - [Required components](#required-components)
 - [About the project](#about-the-project)
 - [Creating a project using CMake](#creating-a-project-using-cmake)
+- [Compiling the code and testing bot](#compiling-the-code-and-testing-bot)
 - [Future plans](#future-plans)
 - [Main Developers](#main-developers)
 - [Thanks](#thanks)
