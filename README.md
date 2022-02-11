@@ -52,7 +52,7 @@ Now go to our `Geschwader/build` folder and issue the following command to gener
 ```
 > cmake .. -G "Visual Studio 16 2019"
 ```
-## Compiling the code and testing the server and client executables
+## Compiling the code and testing bot
 Now once the project is created, we can easily compile it from the console from the build directory using the command:
 ```
 > cmake --build .
