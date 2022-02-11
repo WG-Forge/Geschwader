@@ -14,7 +14,7 @@
 
 <p align="center">
   
-:warning: <b>The bot is not ready yet, it is being updated</b>
+<h2 align="center">:warning: <b>The bot is not ready yet, it is being updated</b></h2>
   
 </p>
 
