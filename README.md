@@ -12,7 +12,11 @@
 
 </p>
 
-<h2 align="center">:warning: <b>The bot is not ready yet, it is being updated</b></h2>
+<p align="center">
+  
+:warning: <b>The bot is not ready yet, it is being updated</b>
+  
+</p>
 
 ## Table of Contents
 - [Required components](#required-components)
