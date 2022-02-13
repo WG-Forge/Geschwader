@@ -11,7 +11,7 @@ PlayerSend::operator json() const{
 	return j;
 }
 
-PlayerGet::PlayerGet(json j) {
+Player::Player(json j) {
 	idx = j["idx"].get<int>();
 	name = j["name"].get<string>();
 	is_observer = j["is_observer"].get<bool>();
@@ -47,37 +47,42 @@ WinPoints::WinPoints(json j) {
 void Map::from_json(json j) {
 	size = j["size"].get<int>();
 	name = j["name"].get<string>();
-	vector<json> jvec = j["spawn_points"].get<vector<json>>();
-	for (int i = 0; i < jvec.size(); i++) {
+	vector<json> tank_spawn_points = j["spawn_points"].get<vector<json>>();
+	for (const auto& type : tank_spawn_points) {
 		map<string, vector<Point>> buf;
-		map<json, vector<json>> jmap = jvec[i].get<map<json, vector<json>>>();
-		for (const auto& it : jmap) {
-			for (int k = 0; k < it.second.size(); ++k) {
-				buf[it.first.get<string>()].emplace_back(it.second[k]);
+		map<json, vector<json>> type_points = type.get<map<json, vector<json>>>();
+		for (const auto& [type, points] : type_points) {
+			for (const auto& point : points) {
+				buf[type.get<string>()].emplace_back(point);
 			}
 		}
 		spawn_points.push_back(buf);
 	}
-	jvec = j["content"]["base"].get<vector<json>>();
-	for (const auto& it : jvec) {
+	vector<json> bases = j["content"]["base"].get<vector<json>>();
+	for (const auto& it : bases) {
 		base.emplace_back(it);
 	}
-	/*jvec = j["content"]["catapult"].get<std::vector<json>>();
-	for (const auto& it : jvec) {
+	/*vector<json> catapults = j["content"]["catapult"].get<std::vector<json>>();
+	for (const auto& it : catapults) {
 		catapult.emplace_back(it);
 	}
-	jvec = j["content"]["hard_repair"].get<std::vector<json>>();
-	for (const auto& it : jvec) {
+	vector<json> hard_repairs = j["content"]["hard_repair"].get<std::vector<json>>();
+	for (const auto& it : hard_repairs) {
 		hard_repair.emplace_back(it);
 	}
-	jvec = j["content"]["light_repair"].get<std::vector<json>>();
-	for (const auto& it : jvec) {
+	vector<json> light_repairs = j["content"]["light_repair"].get<std::vector<json>>();
+	for (const auto& it : light_repairs) {
 		light_repair.emplace_back(it);
-	}
-	jvec = j["content"]["obstacle"].get<std::vector<json>>();
-	for (const auto& it : jvec) {
-		obstacle.emplace_back(it);
 	}*/
+	vector<json> obstacles = j["content"]["obstacle"].get<std::vector<json>>();
+	for (const auto& it : obstacles) {
+		obstacle.emplace_back(it);
+	}
+	for (const auto& pl : spawn_points) {
+		for (const auto& point : pl) {
+			obstacle.insert(obstacle.end(), point.second.begin(), point.second.end());
+		}
+	}
 }
 
 void GameState::from_json(json j) {
@@ -89,26 +94,28 @@ void GameState::from_json(json j) {
 	num_players = j["num_players"].get<int>();
 	num_turns = j["num_turns"].get<int>();
 	current_turn = j["current_turn"].get<int>();
-	vector<json> jvec = j["players"].get<vector<json>>();
-	for (const auto& value : jvec) {
-		players.emplace_back(value);
-	}
-	jvec = j["observers"].get<vector<json>>();
-	for (const auto& value : jvec) {
-		observers.emplace_back(value);
-	}
 	current_player_idx = j["current_player_idx"].get<int>();
 	finished = j["finished"].get<bool>();
-	map<json, json> jmap = j["vehicles"].get<map<json, json>>();
-	for (const auto& it : jmap) {
-		Tank buf(it.second, it.first.get<string>());
-		string type = it.second["vehicle_type"].get<string>();
+
+	vector<json> players_data = j["players"].get<vector<json>>();
+	for (const auto& player : players_data) {
+		players.emplace_back(player);
+	}
+	vector<json> observers_data = j["observers"].get<vector<json>>();
+	for (const auto& observer : observers_data) {
+		observers.emplace_back(observer);
+	}
+
+	map<json, json> vehicle_data = j["vehicles"].get<map<json, json>>();
+	for (const auto& [tank_id, tank_data] : vehicle_data) {
+		Tank buf(tank_data, tank_id.get<string>());
+		string type = tank_data["vehicle_type"].get<string>();
 		if (vehicles[buf.player_id].size() == 0) {
 			vehicles[buf.player_id] = vector<Tank>(5);
 		}
-		if (type == "medium_tank") {
-			buf.vehicle_type = TankType("medium_tank", 2, 2);
-			vehicles[buf.player_id][3] = buf;
+		if (type == "spg") {
+			buf.vehicle_type = TankType("spg", 1, 1);
+			vehicles[buf.player_id][0] = buf;
 		}
 		else if (type == "light_tank") {
 			buf.vehicle_type = TankType("light_tank", 1, 3);
@@ -118,25 +125,25 @@ void GameState::from_json(json j) {
 			buf.vehicle_type = TankType("heavy_tank", 3, 1);
 			vehicles[buf.player_id][2] = buf;
 		}
+		else if (type == "medium_tank") {
+			buf.vehicle_type = TankType("medium_tank", 2, 2);
+			vehicles[buf.player_id][3] = buf;
+		}
 		else if (type == "at_spg") {
 			buf.vehicle_type = TankType("at_spg", 2, 1);
 			vehicles[buf.player_id][4] = buf;
 		}
-		else if (type == "spg") {
-			buf.vehicle_type = TankType("spg", 1, 1);
-			vehicles[buf.player_id][0] = buf;
-		}
 	}
-	jmap = j["attack_matrix"].get<map<json, json>>();
-	for (const auto& it : jmap) {
-		attack_matrix[stoi(it.first.get<string>())] = it.second.get<vector<int>>();
+	map<json, json> attack_data = j["attack_matrix"].get<map<json, json>>();
+	for (const auto& [attacker, victim] : attack_data) {
+		attack_matrix[stoi(attacker.get<string>())] = victim.get<vector<int>>();
 	}
 
 	winner = j["winner"].is_null() ? -1 : j["winner"].get<int>();
 	
-	jmap = j["win_points"].get<map<json, json>>();
-	for (const auto& it : jmap) {
-		win_points[stoi(it.first.get<string>())] = WinPoints(it.second);
+	map<json, json> points_data = j["win_points"].get<map<json, json>>();
+	for (const auto& [player, points] : points_data) {
+		win_points[stoi(player.get<string>())] = WinPoints(points);
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "ClientWG.h"
 
 using nlohmann::json;
+
 using std::string;
 using std::map;
 using std::vector;
@@ -21,11 +22,11 @@ struct PlayerSend {
 	operator json() const;
 };
 
-struct PlayerGet {
+struct Player {
 	int idx;
 	string name;
 	bool is_observer;
-	PlayerGet(json);
+	Player(json);
 };
 
 struct Point {
@@ -41,6 +42,10 @@ struct Point {
 
 	Point operator+(const Point& other) {
 		return Point(x + other.x, y + other.y, z + other.z);
+	}
+
+	bool operator==(const Point& other) {
+		return x == other.x && y == other.y;
 	}
 };
 
@@ -75,8 +80,8 @@ struct GameState {
 	int num_players;
 	int num_turns;
 	int current_turn;
-	vector<PlayerGet> players;
-	vector<PlayerGet> observers;
+	vector<Player> players;
+	vector<Player> observers;
 	int current_player_idx;
 	bool finished;
 	map<int, vector<Tank>> vehicles;
@@ -93,8 +98,8 @@ struct Map {
 	vector<Point> base;
 	/*std::vector<Point> catapult;
 	std::vector<Point> hard_repair;
-	std::vector<Point> light_repair;
-	std::vector<Point> obstacle;*/
+	std::vector<Point> light_repair;*/
+	std::vector<Point> obstacle;
 	void from_json(json str);
 };
 
@@ -111,7 +116,7 @@ struct Chat {
 struct DataAction {
 	int vehicle_id;
 	Point target;
-	DataAction() {}
+	DataAction() = default;
 	DataAction(string str) {
 		json j = json::parse(str);
 		vehicle_id = j["vehicle_id"].get<int>();
@@ -146,8 +151,8 @@ struct PlayersActions {
 	vector<PlayerAction> actions;
 	void from_json(json j) {
 		actions.clear();
-		for (const auto& it : j["actions"]) {
-			actions.emplace_back(it);
+		for (const auto& action : j["actions"]) {
+			actions.emplace_back(action);
 		}
 	}
 };

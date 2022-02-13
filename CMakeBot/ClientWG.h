@@ -58,7 +58,7 @@ private:
         if (buf == 0) {
             printf("Connection closed\n");
         }
-        if (buf < 0) {
+        else if (buf < 0) {
             printf("recv failed with error: %d\n", WSAGetLastError());
         }
         if (buf <= 0) exit(0);
