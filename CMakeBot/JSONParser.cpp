@@ -74,7 +74,7 @@ void Map::from_json(json j) {
 	for (const auto& it : light_repairs) {
 		light_repair.emplace_back(it);
 	}*/
-	vector<json> obstacles = j["content"]["obstacle"].get<std::vector<json>>();
+	vector<json> obstacles = j["content"]["obstacle"].get<vector<json>>();
 	for (const auto& it : obstacles) {
 		obstacle.emplace_back(it);
 	}

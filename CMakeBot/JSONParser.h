@@ -99,7 +99,7 @@ struct Map {
 	/*std::vector<Point> catapult;
 	std::vector<Point> hard_repair;
 	std::vector<Point> light_repair;*/
-	std::vector<Point> obstacle;
+	vector<Point> obstacle;
 	void from_json(json str);
 };
 

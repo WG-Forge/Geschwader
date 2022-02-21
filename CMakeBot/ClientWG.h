@@ -5,7 +5,7 @@
 #include <string>
 #include "json.hpp"
 
-#define WIN32_LEAN_AND_MEAN
+//#define WIN32_LEAN_AND_MEAN
 
 constexpr const char* DEFAULT_IP = "92.223.34.102";
 constexpr const char* DEFAULT_PORT = "443";

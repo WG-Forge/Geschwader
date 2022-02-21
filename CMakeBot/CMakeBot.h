@@ -1,6 +1,4 @@
-﻿#pragma once
-
-#include <iostream>
+﻿#include <iostream>
 #include <map>
 #include <set>
 #include <vector>
