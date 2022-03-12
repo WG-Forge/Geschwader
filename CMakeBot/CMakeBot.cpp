@@ -2,16 +2,6 @@
 
 using namespace std;
 
-enum MapCode {
-    NOTHING = 0,
-    ENEMY_TANK = 1,
-    FRIENDLY_TANK = 2,
-    OBSTACLE = 3,
-    HARD_REPAIR = 4,
-    LIGHT_REPAIR = 5,
-    CATAPULT = 6
-};
-
 class Timer {
 private:
     using clock_t = chrono::high_resolution_clock;
@@ -30,95 +20,14 @@ public:
     }
 };
 
-const vector<Point> near_gex{ Point(1, -1,  0), Point(1,  0, -1), Point(0, 1, -1),
-   Point(-1, 1,  0), Point(-1,  0, 1), Point(0, -1, 1) };
-
-//assigns unique index for point
-int code(const Point& p, int rad) {
-    return (p.x + rad) * (2 * rad + 1) + (p.y + rad);
-}
-
-//returns point from unique code
-Point decode(int value, int rad) {
-    Point buf;
-    buf.x = value / (2 * rad + 1) - rad;
-    buf.y = value % (2 * rad + 1) - rad;
-    buf.z = 0 - buf.x - buf.y;
-    return buf;
-}
-
-bool can_exist(const Point& buf, const int& rad) {
-    if ((buf.x + buf.y + buf.z) != 0) return false;
-    if (max(max(abs(buf.x), abs(buf.y)), abs(buf.z)) > rad) return false;
-    return true;
-}
-
-int distance(const Point& x1, const Point& x2) {
-    return max(max(abs(x1.x - x2.x), abs(x1.y - x2.y)), abs(x1.z - x2.z));
-}
-
-bool can_attack_tank(const Tank& player, const Tank& target, const vector<MapCode>& map_matrix, int rad, bool isModified) {
-    if (player.player_id == target.player_id) return false;
-    int dist = distance(target.position, player.position);
-    if (dist == 0) return false;
-    if (player.vehicle_type.name == Tanks::SPG) {
-        return (dist == (3 + isModified) || dist == 3);
-    }
-    if (player.vehicle_type.name == Tanks::LT) {
-        return (dist == (2 + isModified) || dist == 2);
-    }
-    if (player.vehicle_type.name == Tanks::TT) {
-        return (dist <= (2 + isModified));
-    }
-    if (player.vehicle_type.name == Tanks::ST) {
-        return (dist == (2 + isModified) || dist == 2);
-    }
-    if (player.vehicle_type.name == Tanks::AT_SPG) {
-        if (dist > (3 + isModified)) return false;
-        Point buf(player.position.x, player.position.y, player.position.z);
-        if (player.position.x == target.position.x) {
-            int i = player.position.y - target.position.y;
-            bool flag = (i > 0);
-            for (i = abs(i); i > 1; --i) {
-                (flag) ? --buf.y : ++buf.y;
-                (flag) ? ++buf.z : --buf.z;
-                if (map_matrix[code(buf, rad)] == MapCode::OBSTACLE) return false;
-            }
-            return true;
-        }
-        if (player.position.y == target.position.y) {
-            int i = player.position.x - target.position.x;
-            bool flag = (i > 0);
-            for (i = abs(i); i > 1; --i) {
-                (flag) ? --buf.x : ++buf.x;
-                (flag) ? ++buf.z : --buf.z;
-                if (map_matrix[code(buf, rad)] == MapCode::OBSTACLE) return false;
-            }
-            return true;
-        }
-        if (player.position.z == target.position.z) {
-            int i = player.position.x - target.position.x;
-            bool flag = (i > 0);
-            for (i = abs(i); i > 1; --i) {
-                (flag) ? --buf.x : ++buf.x;
-                (flag) ? ++buf.y : --buf.y;
-                if (map_matrix[code(buf, rad)] == MapCode::OBSTACLE) return false;
-            }
-            return true;
-        }
-        return false;
-    }
-}
-
-
-bool can_attack_player(int player, int target, GameState& gm) {
+bool is_enemy_neutral(int player, int target) {
     if (player == target) return false;
-    if (find(gm.attack_matrix[target].begin(), gm.attack_matrix[target].end(), player) != gm.attack_matrix[target].end()) {
+    if (find(GameState::get().attack_matrix[target].begin(), GameState::get().attack_matrix[target].end(), player) != GameState::get().attack_matrix[target].end()) {
         return true;
     }
-    for (const auto& enemy : gm.players) {
+    for (const auto& enemy : GameState::get().players) {
         if (enemy.idx == player || enemy.idx == target) continue;
-        if (find(gm.attack_matrix[enemy.idx].begin(), gm.attack_matrix[enemy.idx].end(), target) != gm.attack_matrix[enemy.idx].end()) {
+        if (find(GameState::get().attack_matrix[enemy.idx].begin(), GameState::get().attack_matrix[enemy.idx].end(), target) != GameState::get().attack_matrix[enemy.idx].end()) {
             return false;
         }
     }
@@ -157,9 +66,7 @@ int main()
     cin >> name;
     cout << "Game : ";
     cin >> game;
-    PlayerSend pl{ name, "", game, 45, 3, false };
-    GameState gm;
-    Map mm;
+    PlayerSend pl{ name, "", game, 45, 1, false };
     DataAction action;
     Timer t;
 
@@ -170,7 +77,7 @@ int main()
 
     data = wg.send_data({ Action::MAP });
     cout << data.code << " " << data.json_data << endl;
-    mm.from_json(json::parse(data.json_data));
+    Map::get().update(json::parse(data.json_data));
 
     int rad = mm.size - 1;
 
@@ -187,26 +94,41 @@ int main()
         return a.first < b.first;
     };
 
+    int rad = Map::get().size - 1;
+    Graphics g(1000, 1000);
+    g.set_active(false);
+    thread render_thread(&Graphics::update, &g);
     while (true) {
         data = wg.send_data({ Action::GAME_STATE });
         gm.from_json(json::parse(data.json_data));
         if (gm.finished) break;
         if (gm.players.size() == pl.num_players && gm.current_player_idx == bot.idx) {
+        try {
+            data = wg.send_data({ Action::GAME_STATE });
+            GameState::get().update(json::parse(data.json_data));
+        }
+        catch (const exception& e) {
+            cout << "We have exception : " << e.what() << endl;
+            cout << data.code << " " << data.json_data << endl;
+            system("pause");
+        }
+        if (GameState::get().finished) break;
+        if (GameState::get().players.size() == pl.num_players && GameState::get().current_player_idx == bot.idx) {
             cout << "start my work" << endl;
             data = wg.send_data({ Action::MAP });
             mm.from_json(json::parse(data.json_data));
 
             vector<int> can_be_attacked;
-            for (const auto& player : gm.players) {
-                if (can_attack_player(bot.idx, player.idx, gm)) {
+            for (const auto& player : GameState::get().players) {
+                if (is_enemy_neutral(bot.idx, player.idx)) {
                     can_be_attacked.push_back(player.idx);
                 }
             }
 
             vector<MapCode> map_matrix((2 * rad + 1) * (2 * rad + 1), MapCode::NOTHING);
 
-            for (int i = 0; i < mm.obstacle.size(); ++i) {
-                map_matrix[code(mm.obstacle[i], rad)] = MapCode::OBSTACLE;
+            for (int i = 0; i < Map::get().obstacle.size(); ++i) {
+                map_matrix[code(Map::get().obstacle[i], rad)] = MapCode::OBSTACLE;
             }
 
             for (int i = 0; i < mm.catapult.size(); ++i) {
@@ -218,8 +140,8 @@ int main()
             set<pair<int, Tank*>, decltype(cmp2)> how_many_can_attack(cmp2);
 
             for (int i = 0; i < can_be_attacked.size(); ++i) {
-                for (int j = 0; j < gm.vehicles[can_be_attacked[i]].size(); ++j) {
-                    tanks_can_be_attacked.insert(&gm.vehicles[can_be_attacked[i]][j]);
+                for (int j = 0; j < GameState::get().vehicles[can_be_attacked[i]].size(); ++j) {
+                    tanks_can_be_attacked.insert(GameState::get().vehicles[can_be_attacked[i]][j].get());
                 }
             }
             for (auto& my_tank : gm.vehicles[bot.idx]) {
@@ -901,12 +823,13 @@ int main()
             wg.send_data({ Action::TURN });
         }
     }
-    cout << "Winner : " << gm.winner << endl;
+    cout << "Winner : " << GameState::get().winner << endl;
     cout << data.code << " " << data.json_data << endl;
     data = wg.send_data({Action::LOGOUT});
     cout << data.code << " " << data.json_data << endl;
     wg.end_work();
     cout << "Time elapsed: " << t.elapsed() << endl;
     system("pause");
+    render_thread.join();
     return 0;
 }

@@ -1,5 +1,7 @@
 #include "JSONParser.h"
 
+using std::make_shared;
+
 PlayerSend::operator json() const{
 	json j{};
 	j["name"] = name;
@@ -28,16 +30,6 @@ Point::operator json() const {
 	j["y"] = y;
 	j["z"] = z;
 	return j;
-}
-
-Tank::Tank(json j, string tank_id_) {
-	player_id = j["player_id"].get<int>();
-	health = j["health"].get<int>();
-	spawn_position = Point(j["spawn_position"]);
-	position = Point(j["position"]);
-	capture_points = j["capture_points"].get<int>();
-	shoot_range_bonus = j["shoot_range_bonus"].get<int>();
-	tank_id = stoi(tank_id_);
 }
 
 WinPoints::WinPoints(json j) {
