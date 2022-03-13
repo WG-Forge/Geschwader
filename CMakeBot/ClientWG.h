@@ -3,9 +3,7 @@
 #include <ws2tcpip.h>
 #include <iostream>
 #include <string>
-#include "json.hpp"
-
-//#define WIN32_LEAN_AND_MEAN
+#include <json.hpp>
 
 constexpr const char* DEFAULT_IP = "92.223.34.102";
 constexpr const char* DEFAULT_PORT = "443";
@@ -17,7 +15,7 @@ struct Query {
     uint32_t code;
     std::string json_data;
 
-    Query() = default;
+    Query() : code(-1) {}
     Query(uint32_t code, json data = "") : code(code) {
         json_data = (data == "") ? "" : data.dump();
     }

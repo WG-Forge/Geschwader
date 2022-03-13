@@ -72,7 +72,7 @@ Query ClientWG::send_data(const Query& data) {
     memcpy(&res.code, recvbuf, 4);
     res.json_data = recvbuf + 8;
 
-    if (res.code != Result::OKEY) {
+    /*if (res.code != Result::OKEY) {
         std::cout << "we have error, check logs" << std::endl;
         std::cout << res.code << " | " << res.json_data << std::endl;
         std::cout << "Need break : ";
@@ -81,7 +81,7 @@ Query ClientWG::send_data(const Query& data) {
         if (str == "yes") {
             exit(0);
         }
-    }
+    }*/
     return res;
 }
 
