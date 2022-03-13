@@ -410,7 +410,7 @@ Query AT_SPG::try_attack(vector<MapCode>& map_matrix, set<Tank*, decltype(&Tank:
     //shoot
     cout << (json)position << " attacked " << (json)attack_to_destroy[4]->position << endl;
     action.vehicle_id = tank_id;
-    action.target = (position - attack_to_destroy[4]->position) / distance(position, attack_to_destroy[4]->position);
+    action.target = position + (position - attack_to_destroy[4]->position) / distance(position, attack_to_destroy[4]->position);
     tanks_can_be_attacked.erase(attack_to_destroy[4]);
     --attack_to_destroy[4]->health;
     if (attack_to_destroy[4]->health == 0) {
