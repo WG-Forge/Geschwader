@@ -19,6 +19,14 @@ struct Point {
 		return Point(x + other.x, y + other.y, z + other.z);
 	}
 
+	Point operator-(const Point& other) {
+		return Point(x - other.x, y - other.y, z - other.z);
+	}
+
+	Point operator/(const int& scale) {
+		return Point(x / scale, y / scale, z / scale);
+	}
+
 	bool operator==(const Point& other) {
 		return x == other.x && y == other.y;
 	}

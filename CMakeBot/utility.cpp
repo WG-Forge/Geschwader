@@ -37,26 +37,12 @@ int safe_index(Point ps, const vector<MapCode>& map_matrix, int idx)
 {
     unique_ptr<Tank> buf = make_unique<SPG>();
     buf->position = ps;
-<<<<<<< HEAD
     buf->player_id = -1;
-=======
->>>>>>> 459b9f8642ac19336b48715a2453d748c9da1104
     int counter = 0;
     for (const auto& player : GameState::get().players) {
         if (player.idx != idx) {
             for (auto& attacker : GameState::get().vehicles[player.idx]) {
-<<<<<<< HEAD
                 if (attacker->can_attack(*buf, map_matrix)) ++counter;
-=======
-                bool is_mod = false;
-                for (const auto& catapult : Map::get().catapult) {
-                    if (attacker->position == catapult) {
-                        is_mod = true;
-                        break;
-                    }
-                }
-                if (attacker->can_attack(*buf, map_matrix, is_mod)) ++counter;
->>>>>>> 459b9f8642ac19336b48715a2453d748c9da1104
             }
         }
     }

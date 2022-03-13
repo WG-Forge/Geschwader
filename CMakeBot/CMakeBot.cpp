@@ -45,11 +45,7 @@ int main()
     cin >> name;
     cout << "Game : ";
     cin >> game;
-<<<<<<< HEAD
     PlayerSend pl{ name, "", game, 45, 3, false };
-=======
-    PlayerSend pl{ name, "", game, 45, 1, false };
->>>>>>> 459b9f8642ac19336b48715a2453d748c9da1104
     DataAction action;
     Timer t;
 
@@ -103,14 +99,8 @@ int main()
             }
             for (auto& my_tank : GameState::get().vehicles[bot.idx]) {
                 int counter = 0;
-<<<<<<< HEAD
                 for (auto& target : tanks_can_be_attacked) {
                     if (my_tank->can_attack(*target, map_matrix)) ++counter;
-=======
-                bool is_mod = (map_matrix[code(my_tank->position, rad)] == MapCode::CATAPULT);
-                for (auto& target : tanks_can_be_attacked) {
-                    if (my_tank->can_attack(*target, map_matrix, is_mod)) ++counter;
->>>>>>> 459b9f8642ac19336b48715a2453d748c9da1104
                 }
                 how_many_can_attack.insert(make_pair(counter, my_tank.get()));
             }
@@ -121,12 +111,7 @@ int main()
                 int counter_health = target->health;
                 for (int i = 0; i < GameState::get().vehicles[bot.idx].size(); ++i) {
                     if (attack_to_destroy[i]) continue;
-<<<<<<< HEAD
                     if (GameState::get().vehicles[bot.idx][i]->can_attack(*target, map_matrix)) {
-=======
-                    bool is_mod = (map_matrix[code(GameState::get().vehicles[bot.idx][i]->position, rad)] == MapCode::CATAPULT);
-                    if (GameState::get().vehicles[bot.idx][i]->can_attack(*target, map_matrix, is_mod)) {
->>>>>>> 459b9f8642ac19336b48715a2453d748c9da1104
                         --counter_health;
                     }
                 }
@@ -136,12 +121,7 @@ int main()
                 counter_health = target->health;
                 for (auto& [points, my_tank] : how_many_can_attack) {
                     if (attack_to_destroy[(int)my_tank->type]) continue;
-<<<<<<< HEAD
                     if (my_tank->can_attack(*target, map_matrix)) {
-=======
-                    bool is_mod = (map_matrix[code(my_tank->position, rad)] == MapCode::CATAPULT);
-                    if (my_tank->can_attack(*target, map_matrix, is_mod)) {
->>>>>>> 459b9f8642ac19336b48715a2453d748c9da1104
                         attack_to_destroy[(int)my_tank->type] = target;
                         --counter_health;
                     }
