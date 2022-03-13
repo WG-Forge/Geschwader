@@ -8,14 +8,8 @@
 
 <img src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103" >
 
-<img src="https://img.shields.io/badge/status-down-green">
+<img src="https://img.shields.io/badge/status-up-green">
 
-</p>
-
-<p align="center">
-  
-<h2 align="center">:warning: <b>The bot is not ready yet, it is being updated</b></h2>
-  
 </p>
 
 ## Table of Contents
