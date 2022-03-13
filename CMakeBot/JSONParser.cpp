@@ -36,6 +36,7 @@ Tank::Tank(json j, string tank_id_) {
 	spawn_position = Point(j["spawn_position"]);
 	position = Point(j["position"]);
 	capture_points = j["capture_points"].get<int>();
+	shoot_range_bonus = j["shoot_range_bonus"].get<int>();
 	tank_id = stoi(tank_id_);
 }
 
@@ -62,7 +63,7 @@ void Map::from_json(json j) {
 	for (const auto& it : bases) {
 		base.emplace_back(it);
 	}
-	/*vector<json> catapults = j["content"]["catapult"].get<std::vector<json>>();
+	vector<json> catapults = j["content"]["catapult"].get<std::vector<json>>();
 	for (const auto& it : catapults) {
 		catapult.emplace_back(it);
 	}
@@ -73,7 +74,7 @@ void Map::from_json(json j) {
 	vector<json> light_repairs = j["content"]["light_repair"].get<std::vector<json>>();
 	for (const auto& it : light_repairs) {
 		light_repair.emplace_back(it);
-	}*/
+	}
 	vector<json> obstacles = j["content"]["obstacle"].get<vector<json>>();
 	for (const auto& it : obstacles) {
 		obstacle.emplace_back(it);
@@ -114,23 +115,23 @@ void GameState::from_json(json j) {
 			vehicles[buf.player_id] = vector<Tank>(5);
 		}
 		if (type == "spg") {
-			buf.vehicle_type = TankType("spg", 1, 1);
+			buf.vehicle_type = TankType(Tanks::SPG, 1, 1);
 			vehicles[buf.player_id][0] = buf;
 		}
 		else if (type == "light_tank") {
-			buf.vehicle_type = TankType("light_tank", 1, 3);
+			buf.vehicle_type = TankType(Tanks::LT, 1, 3);
 			vehicles[buf.player_id][1] = buf;
 		}
 		else if (type == "heavy_tank") {
-			buf.vehicle_type = TankType("heavy_tank", 3, 1);
+			buf.vehicle_type = TankType(Tanks::TT, 3, 1);
 			vehicles[buf.player_id][2] = buf;
 		}
 		else if (type == "medium_tank") {
-			buf.vehicle_type = TankType("medium_tank", 2, 2);
+			buf.vehicle_type = TankType(Tanks::ST, 2, 2);
 			vehicles[buf.player_id][3] = buf;
 		}
 		else if (type == "at_spg") {
-			buf.vehicle_type = TankType("at_spg", 2, 1);
+			buf.vehicle_type = TankType(Tanks::AT_SPG, 2, 1);
 			vehicles[buf.player_id][4] = buf;
 		}
 	}

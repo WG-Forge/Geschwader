@@ -11,6 +11,14 @@ using std::string;
 using std::map;
 using std::vector;
 
+enum Tanks {
+	SPG = 0,
+	LT = 1,
+	TT = 2,
+	ST = 3,
+	AT_SPG = 4,
+};
+
 struct PlayerSend {
 	string name;
 	string password;
@@ -50,11 +58,11 @@ struct Point {
 };
 
 struct TankType {
-	string name;
+	Tanks name;
 	int health;
 	int speed;
 	TankType() = default;
-	TankType(string str, int health_, int speed_): name(str), health(health_), speed(speed_) {}
+	TankType(Tanks str, int health_, int speed_): name(str), health(health_), speed(speed_) {}
 };
 
 struct Tank {
@@ -65,6 +73,7 @@ struct Tank {
 	Point spawn_position;
 	Point position;
 	int capture_points;
+	int shoot_range_bonus;
 	Tank() : player_id(-1) {}
 	Tank(json, string);
 };
@@ -96,9 +105,9 @@ struct Map {
 	string name;
 	vector<map<string, vector<Point>>> spawn_points;
 	vector<Point> base;
-	/*std::vector<Point> catapult;
-	std::vector<Point> hard_repair;
-	std::vector<Point> light_repair;*/
+	vector<Point> catapult;
+	vector<Point> hard_repair;
+	vector<Point> light_repair;
 	vector<Point> obstacle;
 	void from_json(json str);
 };

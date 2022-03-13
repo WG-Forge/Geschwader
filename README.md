@@ -41,7 +41,6 @@
 
 - To work with json, the project uses a popular library [nlohmann/json](https://github.com/nlohmann/json)
 - The Winsock C++ library is used to work with the server.
-- The bot for the game runs on a neural network.
 
 ### Runtime
 
@@ -71,7 +70,7 @@ Now you can enter the name and game and start the bot.
 
 ## Future plans
 
-- Improve the neural network
+- Improve project
 
 ## Main Developers
 
