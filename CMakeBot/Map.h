@@ -18,7 +18,7 @@ struct Map {
 		return instance;
 	}
 
-	int size;
+	int rad;
 	string name;
 	vector<map<string, vector<Point>>> spawn_points;
 	vector<Point> base;

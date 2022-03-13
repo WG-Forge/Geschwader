@@ -1,7 +1,7 @@
 #include "Map.h"
 
 void Map::update(json j) {
-	size = j["size"].get<int>();
+	rad = j["size"].get<int>() - 1;
 	name = j["name"].get<string>();
 	vector<json> tank_spawn_points = j["spawn_points"].get<vector<json>>();
 	for (const auto& type : tank_spawn_points) {

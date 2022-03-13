@@ -15,7 +15,7 @@ using std::map;
 using std::vector;
 using std::shared_ptr;
 
-enum Tanks {
+enum class Tanks {
 	SPG = 0,
 	LT = 1,
 	TT = 2,

@@ -1,6 +1,6 @@
 #include "Graphics.h"
 
-Graphics::Graphics(int width, int height) : rad(Map::get().size - 1),
+Graphics::Graphics(int width, int height) : rad(Map::get().rad),
 	width(width), height(height)
 {
 	sprites.loadFromFile(sprite_name);
@@ -56,7 +56,7 @@ void Graphics::update()
 		}
 		for (const auto& [player, tanks] : GameState::get().vehicles) {
 			sf::Color color = GameState::get().current_player_idx == player ? sf::Color(0, 128, 20, 255) : sf::Color::Red;
-			for (int i = 0; i < 5 && tanks[i]; i++) {
+			for (int i = 0; i < tanks.size() && tanks[i]; i++) {
 				draw_sprite(map_to_screen(tanks[i]->position) + sf::Vector2f(shift, shift), tank_sprite[i], factor, color);
 			}
 		}

@@ -26,35 +26,24 @@ void GameState::update(json j) {
 	map<json, json> vehicle_data = j["vehicles"].get<map<json, json>>();
 	for (const auto& [tank_id, tank_data] : vehicle_data) {
 		int player_id = tank_data["player_id"].get<int>();
-		//Tank buf(tank_data, tank_id.get<string>());
 		string type = tank_data["vehicle_type"].get<string>();
 		if (vehicles[player_id].size() == 0) {
 			vehicles[player_id] = vector<shared_ptr<Tank>>(5);
 		}
 		if (type == "spg") {
 			vehicles[player_id][0] = make_shared<SPG>(tank_data, tank_id.get<string>());
-			//buf.vehicle_type = TankType("spg", 1, 1);
-			//vehicles[player_id][0] = buf;
 		}
 		else if (type == "light_tank") {
 			vehicles[player_id][1] = make_shared<Light_tank>(tank_data, tank_id.get<string>());
-			//buf.vehicle_type = TankType("light_tank", 1, 3);
-			//vehicles[player_id][1] = buf;
 		}
 		else if (type == "heavy_tank") {
 			vehicles[player_id][2] = make_shared<Heavy_tank>(tank_data, tank_id.get<string>());
-			//buf.vehicle_type = TankType("heavy_tank", 3, 1);
-			//vehicles[player_id][2] = buf;
 		}
 		else if (type == "medium_tank") {
 			vehicles[player_id][3] = make_shared<Medium_tank>(tank_data, tank_id.get<string>());
-			//buf.vehicle_type = TankType("medium_tank", 2, 2);
-			//vehicles[player_id][3] = buf;
 		}
 		else if (type == "at_spg") {
 			vehicles[player_id][4] = make_shared<AT_SPG>(tank_data, tank_id.get<string>());
-			//buf.vehicle_type = TankType("at_spg", 2, 1);
-			//vehicles[player_id][4] = buf;
 		}
 	}
 	map<json, json> attack_data = j["attack_matrix"].get<map<json, json>>();

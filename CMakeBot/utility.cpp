@@ -1,6 +1,14 @@
 #include "utility.h"
 
-extern const vector<Point> near_gex = { Point(1, -1,  0), Point(1,  0, -1), Point(0, 1, -1),
+#include <memory>
+
+#include "GameState.h"
+#include "Tank.h"
+#include "Map.h"
+
+using namespace std;
+
+const vector<Point> near_gex = { Point(1, -1,  0), Point(1,  0, -1), Point(0, 1, -1),
    Point(-1, 1,  0), Point(-1,  0, 1), Point(0, -1, 1) };
 
 int code(const Point& p, int rad) {
@@ -23,4 +31,26 @@ bool can_exist(const Point& buf, const int& rad) {
 
 int distance(const Point& x1, const Point& x2) {
     return max(max(abs(x1.x - x2.x), abs(x1.y - x2.y)), abs(x1.z - x2.z));
+}
+
+int safe_index(Point ps, const vector<MapCode>& map_matrix, int idx)
+{
+    unique_ptr<Tank> buf = make_unique<SPG>();
+    buf->position = ps;
+    int counter = 0;
+    for (const auto& player : GameState::get().players) {
+        if (player.idx != idx) {
+            for (auto& attacker : GameState::get().vehicles[player.idx]) {
+                bool is_mod = false;
+                for (const auto& catapult : Map::get().catapult) {
+                    if (attacker->position == catapult) {
+                        is_mod = true;
+                        break;
+                    }
+                }
+                if (attacker->can_attack(*buf, map_matrix, is_mod)) ++counter;
+            }
+        }
+    }
+    return counter;
 }
