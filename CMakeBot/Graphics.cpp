@@ -1,6 +1,7 @@
 #include "Graphics.h"
 
 Graphics::Graphics(int width, int height) : rad(Map::get().rad),
+	window(sf::VideoMode(width, height), "Bot"),
 	width(width), height(height)
 {
 	sprites.loadFromFile(sprite_name);
@@ -28,13 +29,12 @@ Graphics::Graphics(int width, int height) : rad(Map::get().rad),
 
 void Graphics::update()
 {
-	set_active(true);
-	window.create(sf::VideoMode(width, height), "Bot");
+	//set_active(true);
 
 	float factor = hex_R / 16.f * 0.5f;
 	float shift = (hex_R - 16.f) / factor;
 
-	while (window.isOpen())
+	if (window.isOpen())
 	{
 		window.clear(sf::Color::Black);
 
