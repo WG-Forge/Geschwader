@@ -61,14 +61,18 @@ int main()
     int rad = Map::get().rad;
 
     Graphics g(1000, 1000);
+
     //g.set_active(false);
     //thread render_thread(&Graphics::update, &g);
+
     while (true) {
         data = wg.send_data({ Action::GAME_STATE });
         GameState::get().update(json::parse(data.json_data));
         if (GameState::get().finished) break;
         if (GameState::get().players.size() == pl.num_players && GameState::get().current_player_idx == bot.idx) {
+
             g.update();
+
             cout << "start my work" << endl;
             data = wg.send_data({ Action::MAP });
             Map::get().update(json::parse(data.json_data));

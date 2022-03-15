@@ -9,6 +9,7 @@
 
 using namespace std;
 
+
 Query Tank::step(vector<MapCode>& map_matrix, set<Tank*, decltype(&Tank::cmp)>& tanks_can_be_attacked, vector<Tank*>& attack_to_destroy)
 {
     Query step_data;
@@ -25,7 +26,7 @@ Tank::Tank(json j, string tank_id_, TankType type, int max_health, int speed) : 
 	spawn_position = Point(j["spawn_position"]);
 	position = Point(j["position"]);
 	capture_points = j["capture_points"].get<int>();
-    shoot_range_bonus = j["shoot_range_bonus"].get<int>();
+  shoot_range_bonus = j["shoot_range_bonus"].get<int>();
 }
 
 bool SPG::can_attack(const Tank& target, const vector<MapCode>& map_matrix)
@@ -217,7 +218,6 @@ bool AT_SPG::can_attack(const Tank& target, const vector<MapCode>& map_matrix)
     int dist = distance(target.position, position);
     if (dist == 0) return false;
     if (dist > (3 + shoot_range_bonus)) return false;
-
     int rad = Map::get().rad;
     Point buf = position;
 
@@ -279,6 +279,7 @@ Query AT_SPG::try_move(vector<MapCode>& map_matrix, set<Tank*, decltype(&Tank::c
         Point curr_point = decode(curr_code, rad);
         int counter = 0;
         vector<int> low_priority;
+
         unique_ptr<Tank> buf_attacker = make_unique<AT_SPG>();
         buf_attacker->position = curr_point;
         buf_attacker->player_id = 1;
@@ -365,7 +366,6 @@ Query AT_SPG::try_move(vector<MapCode>& map_matrix, set<Tank*, decltype(&Tank::c
         // safe your tank
         max_counter = 11;
         int dist = 2 * rad;
-
         for (int j = 0; j < near_gex.size(); ++j) {
             Point buf = position + near_gex[j];
             int buf_code = code(buf, rad);
