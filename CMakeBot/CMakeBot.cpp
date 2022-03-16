@@ -61,13 +61,18 @@ int main()
     int rad = Map::get().rad;
 
     Graphics g(1000, 1000);
-    g.set_active(false);
-    thread render_thread(&Graphics::update, &g);
+
+    //g.set_active(false);
+    //thread render_thread(&Graphics::update, &g);
+
     while (true) {
         data = wg.send_data({ Action::GAME_STATE });
         GameState::get().update(json::parse(data.json_data));
         if (GameState::get().finished) break;
         if (GameState::get().players.size() == pl.num_players && GameState::get().current_player_idx == bot.idx) {
+
+            g.update();
+
             cout << "start my work" << endl;
             data = wg.send_data({ Action::MAP });
             Map::get().update(json::parse(data.json_data));
@@ -99,9 +104,8 @@ int main()
             }
             for (auto& my_tank : GameState::get().vehicles[bot.idx]) {
                 int counter = 0;
-                bool is_mod = (map_matrix[code(my_tank->position, rad)] == MapCode::CATAPULT);
                 for (auto& target : tanks_can_be_attacked) {
-                    if (my_tank->can_attack(*target, map_matrix, is_mod)) ++counter;
+                    if (my_tank->can_attack(*target, map_matrix)) ++counter;
                 }
                 how_many_can_attack.insert(make_pair(counter, my_tank.get()));
             }
@@ -112,8 +116,7 @@ int main()
                 int counter_health = target->health;
                 for (int i = 0; i < GameState::get().vehicles[bot.idx].size(); ++i) {
                     if (attack_to_destroy[i]) continue;
-                    bool is_mod = (map_matrix[code(GameState::get().vehicles[bot.idx][i]->position, rad)] == MapCode::CATAPULT);
-                    if (GameState::get().vehicles[bot.idx][i]->can_attack(*target, map_matrix, is_mod)) {
+                    if (GameState::get().vehicles[bot.idx][i]->can_attack(*target, map_matrix)) {
                         --counter_health;
                     }
                 }
@@ -123,8 +126,7 @@ int main()
                 counter_health = target->health;
                 for (auto& [points, my_tank] : how_many_can_attack) {
                     if (attack_to_destroy[(int)my_tank->type]) continue;
-                    bool is_mod = (map_matrix[code(my_tank->position, rad)] == MapCode::CATAPULT);
-                    if (my_tank->can_attack(*target, map_matrix, is_mod)) {
+                    if (my_tank->can_attack(*target, map_matrix)) {
                         attack_to_destroy[(int)my_tank->type] = target;
                         --counter_health;
                     }
@@ -143,8 +145,8 @@ int main()
                 if (data.code != -1) wg.send_data(data);
             }
             cout << "********************************************************************************************************************" << endl;
-            wg.send_data({ Action::TURN });
         }
+        wg.send_data({ Action::TURN });
     }
     cout << "Winner : " << GameState::get().winner << endl;
     cout << data.code << " " << data.json_data << endl;
@@ -153,6 +155,6 @@ int main()
     wg.end_work();
     cout << "Time elapsed: " << t.elapsed() << endl;
     system("pause");
-    render_thread.join();
+    //render_thread.join();
     return 0;
 }
