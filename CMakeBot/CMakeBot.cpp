@@ -45,7 +45,7 @@ int main()
     cin >> name;
     cout << "Game : ";
     cin >> game;
-    PlayerSend pl{ name, "", game, 45, 1, false };
+    PlayerSend pl{ name, "", game, 45, 3, false };
     DataAction action;
     Timer t;
 
@@ -83,6 +83,10 @@ int main()
                     can_be_attacked.push_back(player.idx);
                 }
             }
+            for (int i = 0; i < can_be_attacked.size(); ++i) {
+                cout << can_be_attacked[i] << " ";
+            }
+            cout << endl;
 
             vector<MapCode> map_matrix((2 * rad + 1) * (2 * rad + 1), MapCode::NOTHING);
 
@@ -102,6 +106,7 @@ int main()
                     tanks_can_be_attacked.insert(GameState::get().vehicles[can_be_attacked[i]][j].get());
                 }
             }
+            cout << "Tanks can be attacked size : " << tanks_can_be_attacked.size() << endl;
             for (auto& my_tank : GameState::get().vehicles[bot.idx]) {
                 int counter = 0;
                 for (auto& target : tanks_can_be_attacked) {
@@ -133,6 +138,11 @@ int main()
                     if (counter_health == 0) break;
                 }
             }
+
+            for (int i = 0; i < attack_to_destroy.size(); ++i) {
+                cout << attack_to_destroy[i] << " ";
+            }
+            cout << endl;
 
             for (const auto& [id, vehicles] : GameState::get().vehicles) {
                 for (const auto& vehicle : vehicles) {

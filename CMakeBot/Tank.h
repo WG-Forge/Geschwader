@@ -36,12 +36,27 @@ struct Tank {
     int shoot_range_bonus;
 
     static bool cmp(const Tank* a, const Tank* b) {
-        if (a->capture_points == b->capture_points) return a->health < b->health;
+        if (a->capture_points == b->capture_points) {
+            if (a->health == b->health) {
+                if (a->max_health == b->max_health) {
+                    if (a->speed == b->speed)
+                        return a->tank_id > b->tank_id;
+                    return a->speed > b->speed;
+                }
+                return a->max_health > b->max_health;
+            }
+            return a->health < b->health;
+        }
         return a->capture_points > b->capture_points;
     };
 
     static bool cmp2(const pair<int, Tank*> a, const pair<int, Tank*> b) {
-        if (a.first == b.first) return a.second->health < a.second->health;
+        if (a.first == b.first) {
+            if (a.second->health == a.second->health) {
+                return a.second->tank_id > b.second->tank_id;
+            }
+            return a.second->health < a.second->health;
+        }
         return a.first < b.first;
     };
 
